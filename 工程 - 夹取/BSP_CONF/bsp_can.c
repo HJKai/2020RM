@@ -192,7 +192,7 @@ void send_upraise_cur(int16_t iq1, int16_t iq2)
     TxMessage.Data[6] = 0;
     TxMessage.Data[7] = 0;
 
-    CAN_Transmit(RESCUE_CAN, &TxMessage);
+    CAN_Transmit(UPRAISE_CAN, &TxMessage);
 }
 
 /*发送救援电机电流*/
@@ -212,7 +212,7 @@ void send_rescue_cur(int16_t iq1, int16_t iq2, int16_t iq3)
     TxMessage.Data[6] = 0;
     TxMessage.Data[7] = 0;
 
-    CAN_Transmit(UPRAISE_CAN, &TxMessage);
+    CAN_Transmit(RESCUE_CAN, &TxMessage);
 }
 
 //can1中断

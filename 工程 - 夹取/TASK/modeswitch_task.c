@@ -37,10 +37,9 @@ void mode_switch_task(void *parm)
 	uint32_t mode_switch_wake_time = osKernelSysTick();
   while(1)
   {
-    get_last_mode();
     keyboard_global_hook();
     get_main_mode();
-    
+    get_last_mode();
     xTaskGenericNotify( (TaskHandle_t) info_get_Task_Handle, 
                         (uint32_t) MODE_SWITCH_INFO_SIGNAL, 
                         (eNotifyAction) eSetBits, 
@@ -81,7 +80,7 @@ void get_main_mode(void)
     
     default:
     {
-      
+      upraise.updown_flag = FALL; //下降标志
     }break;
   }
 }
@@ -106,7 +105,7 @@ void get_clamp_mode(void)
         clamp_mode = SMALL_ISLAND;
   }
   
-  if((clamp_mode != last_clamp_mode) || (global_mode != last_global_mode))
+  if(last_global_mode != GLOBAL_CLAMP_MODE)
     upraise.updown_flag = RAISE; //抬升标志
 }
 
@@ -114,6 +113,7 @@ void get_rescue_mode(void)
 { 
   remote_ctrl_rescue_hook();
   keyboard_rescue_hook();
+  upraise.updown_flag = FALL; //下降标志
 }
 
 void get_supply_mode(void)
@@ -121,6 +121,6 @@ void get_supply_mode(void)
   remote_ctrl_supply_hook();
   keyboard_supply_hook();
   
-  if((supply_mode != last_supply_mode) || (global_mode != last_global_mode))
+  if(last_global_mode != GLOBAL_SUPPLY_MODE)
     upraise.updown_flag = RAISE; //抬升标志
 }

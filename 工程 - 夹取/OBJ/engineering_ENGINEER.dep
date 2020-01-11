@@ -1,5 +1,5 @@
 Dependencies for Project 'engineering', Target 'ENGINEER': (DO NOT MODIFY !)
-F (.\main.c)(0x5E117117)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\main.o --omf_browse ..\obj\main.crf --depend ..\obj\main.d)
+F (.\main.c)(0x5E19D6DA)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\main.o --omf_browse ..\obj\main.crf --depend ..\obj\main.d)
 I (stm32f4xx.h)(0x5D67E13D)
 I (..\CORE\core_cm4.h)(0x5559F3AD)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x599ECD2E)
@@ -69,7 +69,8 @@ I (..\FreeRTOS\include\timers.h)(0x573F3A16)
 I (..\TASK\detect_task.h)(0x5E12E67F)
 I (..\TASK\rescue_task.h)(0x5E1437B8)
 I (..\TASK\supply_task.h)(0x5E144179)
-I (..\TASK\clamp_task.h)(0x5E12FC0C)
+I (..\TASK\clamp_task.h)(0x5E198AC6)
+I (..\TASK\upraise_task.h)(0x5E19D6DA)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x599ECD2C)
 F (.\stm32f4xx_it.c)(0x5D5D1CA6)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\stm32f4xx_it.o --omf_browse ..\obj\stm32f4xx_it.crf --depend ..\obj\stm32f4xx_it.d)
 I (stm32f4xx_it.h)(0x5559F374)
@@ -216,10 +217,10 @@ I (..\TASK\info_get_task.h)(0x5E038420)
 I (..\TASK\detect_task.h)(0x5E12E67F)
 I (..\TASK\judge_task.h)(0x5DB1BB5B)
 I (..\TASK\pc_task.h)(0x5DAB02CD)
-I (..\TASK\clamp_task.h)(0x5E12FC0C)
+I (..\TASK\clamp_task.h)(0x5E198AC6)
 I (..\TASK\supply_task.h)(0x5E144179)
 I (..\TASK\rescue_task.h)(0x5E1437B8)
-I (..\TASK\upraise_task.h)(0x5E172E27)
+I (..\TASK\upraise_task.h)(0x5E19D6DA)
 F (.\STM32_TIM_BASE.c)(0x5D8A097F)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\stm32_tim_base.o --omf_browse ..\obj\stm32_tim_base.crf --depend ..\obj\stm32_tim_base.d)
 I (STM32_TIM_BASE.h)(0x5D67F446)
 I (stm32f4xx.h)(0x5D67E13D)
@@ -2395,7 +2396,7 @@ I (..\FWLIB\inc\stm32f4xx_dma2d.h)(0x555C4781)
 I (..\FWLIB\inc\stm32f4xx_fmc.h)(0x555C4781)
 I (..\FWLIB\inc\stm32f4xx_sai.h)(0x555C4781)
 F (..\USER_CONF\sys_config.h)(0x5DEA5515)()
-F (..\BSP_CONF\bsp_can.c)(0x5E11ABD4)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\bsp_can.o --omf_browse ..\obj\bsp_can.crf --depend ..\obj\bsp_can.d)
+F (..\BSP_CONF\bsp_can.c)(0x5E19E63A)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\bsp_can.o --omf_browse ..\obj\bsp_can.crf --depend ..\obj\bsp_can.d)
 I (..\BSP_CONF\bsp_can.h)(0x5E11ABD4)
 I (..\USER\stm32f4xx.h)(0x5D67E13D)
 I (..\CORE\core_cm4.h)(0x5559F3AD)
@@ -2478,7 +2479,7 @@ I (..\FWLIB\inc\stm32f4xx_dma2d.h)(0x555C4781)
 I (..\FWLIB\inc\stm32f4xx_fmc.h)(0x555C4781)
 I (..\FWLIB\inc\stm32f4xx_sai.h)(0x555C4781)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x599ECD2C)
-F (..\TASK\comm_task.c)(0x5E173CDE)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\comm_task.o --omf_browse ..\obj\comm_task.crf --depend ..\obj\comm_task.d)
+F (..\TASK\comm_task.c)(0x5E19E585)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\comm_task.o --omf_browse ..\obj\comm_task.crf --depend ..\obj\comm_task.d)
 I (..\TASK\comm_task.h)(0x5E1445D4)
 I (..\USER\stm32f4xx.h)(0x5D67E13D)
 I (..\CORE\core_cm4.h)(0x5559F3AD)
@@ -2529,7 +2530,7 @@ I (..\FreeRTOS\include\task.h)(0x573F3A16)
 I (..\FreeRTOS\include\list.h)(0x573F3A16)
 I (..\BSP_CONF\bsp_can.h)(0x5E11ABD4)
 I (..\FUNTION\pid.h)(0x5E00F347)
-F (..\TASK\detect_task.c)(0x5E12E90B)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\detect_task.o --omf_browse ..\obj\detect_task.crf --depend ..\obj\detect_task.d)
+F (..\TASK\detect_task.c)(0x5E19D508)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\detect_task.o --omf_browse ..\obj\detect_task.crf --depend ..\obj\detect_task.d)
 I (..\TASK\detect_task.h)(0x5E12E67F)
 I (..\USER\stm32f4xx.h)(0x5D67E13D)
 I (..\CORE\core_cm4.h)(0x5559F3AD)
@@ -2638,10 +2639,10 @@ I (..\USER_CONF\rc.h)(0x5D920986)
 I (..\BSP_CONF\bsp_can.h)(0x5E11ABD4)
 I (..\TASK\modeswitch_task.h)(0x5E10AF48)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x599ECD2C)
-I (..\TASK\clamp_task.h)(0x5E12FC0C)
+I (..\TASK\clamp_task.h)(0x5E198AC6)
 I (..\TASK\rescue_task.h)(0x5E1437B8)
 I (..\TASK\supply_task.h)(0x5E144179)
-I (..\TASK\upraise_task.h)(0x5E172E27)
+I (..\TASK\upraise_task.h)(0x5E19D6DA)
 I (..\USER_CONF\sys_config.h)(0x5DEA5515)
 I (..\PROTOCOL\pc_rx_data.h)(0x5DB719BD)
 I (..\PROTOCOL\data_packet.h)(0x5E061641)
@@ -2651,7 +2652,7 @@ I (..\FreeRTOS\include\semphr.h)(0x573F3A16)
 I (..\FreeRTOS\include\queue.h)(0x573F3A16)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x599ECD2C)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x599ECD2E)
-F (..\TASK\modeswitch_task.c)(0x5E172D80)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\modeswitch_task.o --omf_browse ..\obj\modeswitch_task.crf --depend ..\obj\modeswitch_task.d)
+F (..\TASK\modeswitch_task.c)(0x5E19E861)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\modeswitch_task.o --omf_browse ..\obj\modeswitch_task.crf --depend ..\obj\modeswitch_task.d)
 I (..\TASK\modeswitch_task.h)(0x5E10AF48)
 I (..\USER\stm32f4xx.h)(0x5D67E13D)
 I (..\CORE\core_cm4.h)(0x5559F3AD)
@@ -2705,10 +2706,10 @@ I (..\FUNTION\remote_ctrl.h)(0x5E173AC9)
 I (..\USER_CONF\rc.h)(0x5D920986)
 I (..\FUNTION\keyboard.h)(0x5E146138)
 I (..\TASK\comm_task.h)(0x5E1445D4)
-I (..\TASK\clamp_task.h)(0x5E12FC0C)
+I (..\TASK\clamp_task.h)(0x5E198AC6)
 I (..\TASK\rescue_task.h)(0x5E1437B8)
 I (..\TASK\supply_task.h)(0x5E144179)
-I (..\TASK\upraise_task.h)(0x5E172E27)
+I (..\TASK\upraise_task.h)(0x5E19D6DA)
 I (..\FUNTION\ramp.h)(0x5DF3061F)
 F (..\TASK\judge_task.c)(0x5DBE76E0)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\judge_task.o --omf_browse ..\obj\judge_task.crf --depend ..\obj\judge_task.d)
 I (..\TASK\judge_task.h)(0x5DB1BB5B)
@@ -2826,8 +2827,8 @@ I (..\FreeRTOS\include\semphr.h)(0x573F3A16)
 I (..\FreeRTOS\include\queue.h)(0x573F3A16)
 I (..\PROTOCOL\pc_rx_data.h)(0x5DB719BD)
 I (..\PROTOCOL\pc_tx_data.h)(0x5DB1CD87)
-F (..\TASK\clamp_task.c)(0x5E174687)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\clamp_task.o --omf_browse ..\obj\clamp_task.crf --depend ..\obj\clamp_task.d)
-I (..\TASK\clamp_task.h)(0x5E12FC0C)
+F (..\TASK\clamp_task.c)(0x5E19D919)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\clamp_task.o --omf_browse ..\obj\clamp_task.crf --depend ..\obj\clamp_task.d)
+I (..\TASK\clamp_task.h)(0x5E198AC6)
 I (..\USER\stm32f4xx.h)(0x5D67E13D)
 I (..\CORE\core_cm4.h)(0x5559F3AD)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x599ECD2E)
@@ -2879,7 +2880,7 @@ I (..\TASK\modeswitch_task.h)(0x5E10AF48)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x599ECD2C)
 I (..\TASK\comm_task.h)(0x5E1445D4)
 I (..\TASK\detect_task.h)(0x5E12E67F)
-I (..\TASK\upraise_task.h)(0x5E172E27)
+I (..\TASK\upraise_task.h)(0x5E19D6DA)
 I (..\FUNTION\pid.h)(0x5E00F347)
 I (..\BSP_CONF\bsp_can.h)(0x5E11ABD4)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x599ECD2E)
@@ -2938,7 +2939,7 @@ I (..\TASK\comm_task.h)(0x5E1445D4)
 I (..\FUNTION\pid.h)(0x5E00F347)
 I (..\BSP_CONF\bsp_can.h)(0x5E11ABD4)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x599ECD2E)
-F (..\TASK\supply_task.c)(0x5E144301)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\supply_task.o --omf_browse ..\obj\supply_task.crf --depend ..\obj\supply_task.d)
+F (..\TASK\supply_task.c)(0x5E1999C4)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\supply_task.o --omf_browse ..\obj\supply_task.crf --depend ..\obj\supply_task.d)
 I (..\TASK\supply_task.h)(0x5E144179)
 I (..\USER\stm32f4xx.h)(0x5D67E13D)
 I (..\CORE\core_cm4.h)(0x5559F3AD)
@@ -2993,8 +2994,8 @@ I (..\TASK\comm_task.h)(0x5E1445D4)
 I (..\FUNTION\pid.h)(0x5E00F347)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x599ECD2E)
 I (..\BSP_CONF\bsp_can.h)(0x5E11ABD4)
-F (..\TASK\upraise_task.c)(0x5E1730DA)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\upraise_task.o --omf_browse ..\obj\upraise_task.crf --depend ..\obj\upraise_task.d)
-I (..\TASK\upraise_task.h)(0x5E172E27)
+F (..\TASK\upraise_task.c)(0x5E19F306)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\upraise_task.o --omf_browse ..\obj\upraise_task.crf --depend ..\obj\upraise_task.d)
+I (..\TASK\upraise_task.h)(0x5E19D6DA)
 I (..\USER\stm32f4xx.h)(0x5D67E13D)
 I (..\CORE\core_cm4.h)(0x5559F3AD)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x599ECD2E)
@@ -3045,6 +3046,7 @@ I (..\FreeRTOS\include\list.h)(0x573F3A16)
 I (..\TASK\modeswitch_task.h)(0x5E10AF48)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x599ECD2C)
 I (..\TASK\comm_task.h)(0x5E1445D4)
+I (..\TASK\clamp_task.h)(0x5E198AC6)
 I (..\FUNTION\pid.h)(0x5E00F347)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x599ECD2E)
 I (..\BSP_CONF\bsp_can.h)(0x5E11ABD4)
@@ -3092,10 +3094,10 @@ I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x599ECD2C)
 I (..\USER_CONF\sys_config.h)(0x5DEA5515)
 I (..\USER\STM32_TIM_BASE.h)(0x5D67F446)
 I (..\FUNTION\keyboard.h)(0x5E146138)
-I (..\TASK\clamp_task.h)(0x5E12FC0C)
+I (..\TASK\clamp_task.h)(0x5E198AC6)
 I (..\TASK\rescue_task.h)(0x5E1437B8)
 I (..\TASK\supply_task.h)(0x5E144179)
-I (..\TASK\upraise_task.h)(0x5E172E27)
+I (..\TASK\upraise_task.h)(0x5E19D6DA)
 I (..\TASK\modeswitch_task.h)(0x5E10AF48)
 F (..\FUNTION\keyboard.c)(0x5E1730DA)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\keyboard.o --omf_browse ..\obj\keyboard.crf --depend ..\obj\keyboard.d)
 I (..\FUNTION\keyboard.h)(0x5E146138)
@@ -3140,10 +3142,10 @@ I (..\USER_CONF\rc.h)(0x5D920986)
 I (..\USER\STM32_TIM_BASE.h)(0x5D67F446)
 I (..\USER_CONF\sys_config.h)(0x5DEA5515)
 I (..\FUNTION\ramp.h)(0x5DF3061F)
-I (..\TASK\clamp_task.h)(0x5E12FC0C)
+I (..\TASK\clamp_task.h)(0x5E198AC6)
 I (..\TASK\rescue_task.h)(0x5E1437B8)
 I (..\TASK\supply_task.h)(0x5E144179)
-I (..\TASK\upraise_task.h)(0x5E172E27)
+I (..\TASK\upraise_task.h)(0x5E19D6DA)
 I (..\TASK\modeswitch_task.h)(0x5E10AF48)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x599ECD2C)
 F (..\FUNTION\ramp.c)(0x5DF3061F)(--c99 --gnu -c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\FWLIB\inc -I ..\USER -I ..\FreeRTOS\include -I ..\FreeRTOS\portable\MemMang -I ..\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\USER_CONF -I ..\BSP_CONF -I ..\TASK -I ..\FUNTION -I ..\PROTOCOL -I .\include-I.\RTE\_ENGINEER-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="525" -DSTM32F427xx -DUSE_STDPERIPH_DRIVER -DSTM32F427_437xx -DARM_MATH_CM4 -D__FPU_PRESENT="1" -D__TARGET_FPU_VFP -D__CC_ARM -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING-o ..\obj\ramp.o --omf_browse ..\obj\ramp.crf --depend ..\obj\ramp.d)

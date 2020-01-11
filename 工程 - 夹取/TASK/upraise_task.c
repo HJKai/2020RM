@@ -7,6 +7,7 @@
 
 #include "modeswitch_task.h"
 #include "comm_task.h"
+#include "clamp_task.h"
 #include "pid.h"
 #include "math.h"
 #include "bsp_can.h"
@@ -17,7 +18,7 @@ UBaseType_t upraise_stack_surplus;
 upraise_t upraise;
 
 uint32_t small_upraise_angle = 500,big_upraise_angle = 1000,clamp_upraise_angle = 500;
-float upraise_pid[6] = {13.0f, 0.0f, 90.0f, 4.5f, 0.05, 0};
+float upraise_pid[6] = {10.0f, 0, 0, 4.5f, 0, 0};
 
 void upraise_task(void *parm)
 {
@@ -60,14 +61,14 @@ void upraise_task(void *parm)
               upraise.angle_ref[0] = upraise.init_angle[0] + clamp_upraise_angle;
               upraise.angle_ref[1] = upraise.init_angle[1] - clamp_upraise_angle;
             }
-            if(fabs(pid_upraise[0].set - pid_upraise[0].get) < 10)
+            if(fabs(upraise.angle_ref[0] - pid_upraise[0].get) < 10 && fabs(upraise.angle_ref[1] - pid_upraise[1].get) < 10)
             {
               upraise.updown_flag = UP;  //抬升完成
             }
             
           }
           
-          if(upraise.updown_flag == FALL)  //正在下降
+          if(clamp.clamp_flag == CLAMPED && upraise.updown_flag == FALL)  //正在下降    夹子收回来才能下降
           {
             upraise.angle_ref[0] = upraise.init_angle[0];
             upraise.angle_ref[1] = upraise.init_angle[1];

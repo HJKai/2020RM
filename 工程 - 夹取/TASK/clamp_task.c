@@ -20,7 +20,7 @@ clamp_t clamp;
 pick_box_t pick_box;
 island_offset offset_angle;
 
-float clamp_pid[6] = {15.0f, 15.0f, 45.0f, 4.5f, 15, 0};
+float clamp_pid[6] = {15, 15, 0, 5, 15, 0};
 
 void clamp_task(void *parm)
 {
@@ -92,13 +92,13 @@ void clamp_task(void *parm)
         
         clamp.last_state = clamp.state; //获取上一次状态
         
-        if((!clamp_is_controllable()) || upraise.state == INIT_NEVER)
+        if(!clamp_is_controllable())
         {
           if(clamp.state == INIT_DONE)
           {
             clamp.angle_ref[0] = clamp.init_angle[0];
             clamp.angle_ref[1] = clamp.init_angle[1];
-            clamp.angle_ref[2] = clamp.init_angle[2] - offset_angle.small_island.offset_angle_6; //回到中间
+            clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.small_island.offset_angle_mid; //回到中间
           }
           else
           {
@@ -135,9 +135,10 @@ void clamp_param_init(void)
 {
   memset(&clamp, 0, sizeof(clamp_t));
   
-  clamp.flag = 0;
+  clamp.init_flag = 0;
   clamp.state = INIT_NEVER;
   clamp.last_state = INIT_DONE;
+  clamp.clamp_flag = CLAMPED;
 
   pick_box = FRIST_BOX; //第一个位置状态
   
@@ -145,27 +146,36 @@ void clamp_param_init(void)
   {
     PID_Struct_Init(&pid_clamp[i],clamp_pid[0],clamp_pid[1],clamp_pid[2],5000, 500, INIT);
     PID_Struct_Init(&pid_clamp_spd[i],clamp_pid[3],clamp_pid[4],clamp_pid[5],10000, 500, INIT);
+//    clamp.init_angle[i] = moto_clamp[i].total_angle;
   }
   
-  offset_angle.small_island.offset_angle_1 = 720;  //1->2
-  offset_angle.small_island.offset_angle_2 = 1440; //2->3
-  offset_angle.small_island.offset_angle_3 = 1440; //3->4
-  offset_angle.small_island.offset_angle_4 = 720;  //4->5
-  offset_angle.small_island.offset_angle_5 = 0;    //5->6
-  offset_angle.small_island.offset_angle_6 = 720;  //归中
+  offset_angle.small_island.offset_angle_left   = 0;    //左
+  offset_angle.small_island.offset_angle_mid    = 1000; //中间
+  offset_angle.small_island.offset_angle_right  = 2000; //右
   
-  offset_angle.big_island.offset_angle_1 = 720;    //1->2
-  offset_angle.big_island.offset_angle_2 = 0;      //2->3
-  offset_angle.big_island.offset_angle_3 = 1400;   //3->4
-  offset_angle.big_island.offset_angle_4 = 720;    //归中
+  offset_angle.big_island.offset_angle_left     = 0;    //左
+  offset_angle.big_island.offset_angle_mid      = 1000; //中间
+  offset_angle.big_island.offset_angle_right    = 2000; //右
+  
+  GPIO_ResetBits(GPIOB,GPIO_Pin_0); //气缸缩回来
+  GPIO_SetBits(GPIOE,GPIO_Pin_12);
+  
+  GPIO_ResetBits(GPIOE,GPIO_Pin_4); //夹子松开
+  GPIO_SetBits(GPIOF,GPIO_Pin_0);
   
 }
 
+/*
+*  error_angle[3]      : 记录每个电机误差的次数，用来判断电机是否堵转
+*  error_state[3]      : 记录每个电机的状态，是否已经堵转
+*  clamp.init_flag     ：为了某电机出现堵转后就停下来，且不影响其他电机
+*
+*/
 void clamp_init_handler(void)
 {
   static uint32_t error_angle[3] = {0};
   static uint8_t error_state[3] = {0};
-  if((clamp.flag == 0) || (clamp.state != clamp.last_state))
+  if((clamp.init_flag == 0) || (clamp.state != clamp.last_state))
   {
     clamp.spd_ref[0] = 500;//左边
     clamp.spd_ref[1] = -500;//右边
@@ -180,7 +190,7 @@ void clamp_init_handler(void)
       {
         error_state[i] = 1;
         clamp.spd_ref[i] = 0;
-        clamp.flag = 1;
+        clamp.init_flag = 1;
       }
     }
   }
@@ -192,8 +202,7 @@ void clamp_init_handler(void)
       error_angle[i] = 0;
       error_state[i] = 0;
       clamp.state = INIT_DONE;
-      clamp.flag = 0;
-      clamp_mode = SMALL_ISLAND;
+      clamp.init_flag = 0;
     }
   }
 }
@@ -204,6 +213,7 @@ void small_island_handler(void)
 {
   if(clamp.clamp_cmd)
   {
+    clamp.clamp_flag = CLAMPING;
     if(pick_box == FRIST_BOX)
     {
       if(HAL_GetTick() - action_times > 10)
@@ -221,21 +231,21 @@ void small_island_handler(void)
         clamp.angle_ref[0] = clamp.init_angle[0] + 45;  //向上翻转
         clamp.angle_ref[1] = clamp.init_angle[1] - 45;
       }
-      if(HAL_GetTick() - action_times > 800)
+      if(HAL_GetTick() - action_times > 900)
       {
-        clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.small_island.offset_angle_1; //平移
+        clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.small_island.offset_angle_left; //往左移
       }
-      if(HAL_GetTick() - action_times > 1200)
+      if(HAL_GetTick() - action_times > 1100)
       {
         clamp.angle_ref[0] = clamp.init_angle[0] + 180;  //向下翻转
         clamp.angle_ref[1] = clamp.init_angle[1] - 180;
       }
-      if(HAL_GetTick() - action_times > 1300)
+      if(HAL_GetTick() - action_times > 1250)
       {
         GPIO_ResetBits(GPIOE,GPIO_Pin_4); //松开
         GPIO_SetBits(GPIOF,GPIO_Pin_0);
       }
-      if(HAL_GetTick() - action_times > 1400)
+      if(HAL_GetTick() - action_times > 1300)
       {
         action_times = HAL_GetTick();
         pick_box = SECOND_BOX;
@@ -248,36 +258,35 @@ void small_island_handler(void)
     /*第2箱*/
     if(pick_box == SECOND_BOX)
     {
-      if(HAL_GetTick() - action_times > 10)
-      {
-        clamp.angle_ref[0] = clamp.init_angle[0] + 180;  //向下翻转
-        clamp.angle_ref[1] = clamp.init_angle[1] - 180;
-      }
-      if(HAL_GetTick() - action_times > 200)
+      if(HAL_GetTick() - action_times > 100)
       {
         GPIO_ResetBits(GPIOF,GPIO_Pin_0); //夹住
         GPIO_SetBits(GPIOE,GPIO_Pin_4);
       }
-      if(HAL_GetTick() - action_times > 400)
+      if(HAL_GetTick() - action_times > 150)
       {
         clamp.angle_ref[0] = clamp.init_angle[0] + 45;  //向上翻转
         clamp.angle_ref[1] = clamp.init_angle[1] - 45;
       }
-      if(HAL_GetTick() - action_times > 800)
+      if(HAL_GetTick() - action_times > 300)
       {
-        clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.small_island.offset_angle_2; //平移
+        clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.small_island.offset_angle_mid; //回中
       }
-      if(HAL_GetTick() - action_times > 1200)
+       if(HAL_GetTick() - action_times > 650)
+      {
+        clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.small_island.offset_angle_right; //往右移
+      }
+      if(HAL_GetTick() - action_times > 850)
       {
         clamp.angle_ref[0] = clamp.init_angle[0] + 180;  //向下翻转
         clamp.angle_ref[1] = clamp.init_angle[1] - 180;
       }
-      if(HAL_GetTick() - action_times > 1300)
+      if(HAL_GetTick() - action_times > 1000)
       {
         GPIO_ResetBits(GPIOE,GPIO_Pin_4); //松开
         GPIO_SetBits(GPIOF,GPIO_Pin_0);
       }
-      if(HAL_GetTick() - action_times > 1400)
+      if(HAL_GetTick() - action_times > 1050)
       {
         pick_box = THRID_BOX;
         action_times = HAL_GetTick();
@@ -297,162 +306,21 @@ void small_island_handler(void)
         clamp.angle_ref[0] = clamp.init_angle[0] + 45;  //向上翻转
         clamp.angle_ref[1] = clamp.init_angle[1] - 45;
       }
-      if(HAL_GetTick() - action_times > 550)
+      if(HAL_GetTick() - action_times > 350)
       {
-        clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.small_island.offset_angle_3; //平移
+        clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.small_island.offset_angle_mid; //回中
       }
-      if(HAL_GetTick() - action_times > 950)
-      {
-        GPIO_ResetBits(GPIOE,GPIO_Pin_12); //左气缸伸出去
-        GPIO_SetBits(GPIOB,GPIO_Pin_0);
-        GPIO_ResetBits(GPIOB,GPIO_Pin_1); //右气缸伸出去
-        GPIO_SetBits(GPIOC,GPIO_Pin_0);
-      }
-      if(HAL_GetTick() - action_times > 950)
+      if(HAL_GetTick() - action_times > 600)
       {
         clamp.angle_ref[0] = clamp.init_angle[0] + 180;  //向下翻转
         clamp.angle_ref[1] = clamp.init_angle[1] - 180;
       }
-      if(HAL_GetTick() - action_times > 1050)
+      if(HAL_GetTick() - action_times > 750)
       {
         GPIO_ResetBits(GPIOE,GPIO_Pin_4); //松开
         GPIO_SetBits(GPIOF,GPIO_Pin_0);
-      }
-      if(HAL_GetTick() - action_times > 1150)
-      {
-        pick_box = FOURTH_BOX;
-        action_times = HAL_GetTick();
-      }
-    }
-    /*第4箱*/
-    if(pick_box == FOURTH_BOX)
-    {
-      if(HAL_GetTick() - action_times > 50)
-      {
-        GPIO_ResetBits(GPIOF,GPIO_Pin_0); //夹住
-        GPIO_SetBits(GPIOE,GPIO_Pin_4);
-      }
-      if(HAL_GetTick() - action_times > 150)
-      {
-        clamp.angle_ref[0] = clamp.init_angle[0] + 45;  //向上翻转
-        clamp.angle_ref[1] = clamp.init_angle[1] - 45;
-      }
-      if(HAL_GetTick() - action_times > 350)
-      {
-        GPIO_ResetBits(GPIOB,GPIO_Pin_0); //左气缸缩回来
-        GPIO_SetBits(GPIOE,GPIO_Pin_12);
-        GPIO_ResetBits(GPIOC,GPIO_Pin_0); //右气缸缩回来
-        GPIO_SetBits(GPIOB,GPIO_Pin_1);
-      }
-      if(HAL_GetTick() - action_times > 550)
-      {
-        clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.small_island.offset_angle_4; //平移
       }
       if(HAL_GetTick() - action_times > 800)
-      {
-        GPIO_ResetBits(GPIOE,GPIO_Pin_12); //左气缸伸出去
-        GPIO_SetBits(GPIOB,GPIO_Pin_0);
-        GPIO_ResetBits(GPIOB,GPIO_Pin_1); //右气缸伸出去
-        GPIO_SetBits(GPIOC,GPIO_Pin_0);
-      }
-      if(HAL_GetTick() - action_times > 950)
-      {
-        clamp.angle_ref[0] = clamp.init_angle[0] + 180;  //向下翻转
-        clamp.angle_ref[1] = clamp.init_angle[1] - 180;
-      }
-      if(HAL_GetTick() - action_times > 1050)
-      {
-        GPIO_ResetBits(GPIOE,GPIO_Pin_4); //松开
-        GPIO_SetBits(GPIOF,GPIO_Pin_0);
-      }
-      if(HAL_GetTick() - action_times > 1150)
-      {
-        pick_box = FIFTH_BOX;
-        action_times = HAL_GetTick();
-      }
-    }
-    /*第5箱*/
-    if(pick_box == FIFTH_BOX)
-    {
-      if(HAL_GetTick() - action_times > 50)
-      {
-        GPIO_ResetBits(GPIOF,GPIO_Pin_0); //夹住
-        GPIO_SetBits(GPIOE,GPIO_Pin_4);
-      }
-      if(HAL_GetTick() - action_times > 150)
-      {
-        clamp.angle_ref[0] = clamp.init_angle[0] + 45;  //向上翻转
-        clamp.angle_ref[1] = clamp.init_angle[1] - 45;
-      }
-      if(HAL_GetTick() - action_times > 350)
-      {
-        GPIO_ResetBits(GPIOB,GPIO_Pin_0); //左气缸缩回来
-        GPIO_SetBits(GPIOE,GPIO_Pin_12);
-        GPIO_ResetBits(GPIOC,GPIO_Pin_0); //右气缸缩回来
-        GPIO_SetBits(GPIOB,GPIO_Pin_1);
-      }
-      if(HAL_GetTick() - action_times > 550)
-      {
-        clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.small_island.offset_angle_5; //平移
-      }
-      if(HAL_GetTick() - action_times > 800)
-      {
-        GPIO_ResetBits(GPIOE,GPIO_Pin_12); //左气缸伸出去
-        GPIO_SetBits(GPIOB,GPIO_Pin_0);
-        GPIO_ResetBits(GPIOB,GPIO_Pin_1); //右气缸伸出去
-        GPIO_SetBits(GPIOC,GPIO_Pin_0);
-      }
-      if(HAL_GetTick() - action_times > 950)
-      {
-        clamp.angle_ref[0] = clamp.init_angle[0] + 180;  //向下翻转
-        clamp.angle_ref[1] = clamp.init_angle[1] - 180;
-      }
-      if(HAL_GetTick() - action_times > 1050)
-      {
-        GPIO_ResetBits(GPIOE,GPIO_Pin_4); //松开
-        GPIO_SetBits(GPIOF,GPIO_Pin_0);
-      }
-      if(HAL_GetTick() - action_times > 1150)
-      {
-        pick_box = SIXTH_BOX;
-        action_times = HAL_GetTick();
-      }
-    }
-    /*第6箱*/
-    if(pick_box == SIXTH_BOX)
-    {
-      if(HAL_GetTick() - action_times > 50)
-      {
-        GPIO_ResetBits(GPIOF,GPIO_Pin_0); //夹住
-        GPIO_SetBits(GPIOE,GPIO_Pin_4);
-      }
-      if(HAL_GetTick() - action_times > 150)
-      {
-        clamp.angle_ref[0] = clamp.init_angle[0] + 45;  //向上翻转
-        clamp.angle_ref[1] = clamp.init_angle[1] - 45;
-      }
-      if(HAL_GetTick() - action_times > 350)
-      {
-        GPIO_ResetBits(GPIOB,GPIO_Pin_0); //左气缸缩回来
-        GPIO_SetBits(GPIOE,GPIO_Pin_12);
-        GPIO_ResetBits(GPIOC,GPIO_Pin_0); //右气缸缩回来
-        GPIO_SetBits(GPIOB,GPIO_Pin_1);
-      }
-      if(HAL_GetTick() - action_times > 550)
-      {
-        clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.small_island.offset_angle_6; //平移
-      }
-      if(HAL_GetTick() - action_times > 950)
-      {
-        clamp.angle_ref[0] = clamp.init_angle[0] + 180;  //向下翻转
-        clamp.angle_ref[1] = clamp.init_angle[1] - 180;
-      }
-      if(HAL_GetTick() - action_times > 1050)
-      {
-        GPIO_ResetBits(GPIOE,GPIO_Pin_4); //松开
-        GPIO_SetBits(GPIOF,GPIO_Pin_0);
-      }
-      if(HAL_GetTick() - action_times > 1150)
       {
         pick_box = FRIST_BOX;
         action_times = HAL_GetTick();
@@ -463,9 +331,10 @@ void small_island_handler(void)
   {
     action_times = HAL_GetTick();
     pick_box = FRIST_BOX;
-    clamp.angle_ref[2] = clamp.init_angle[2]; //平移
-    clamp.angle_ref[0] = clamp.init_angle[0] + 45;  //向上翻转
-    clamp.angle_ref[1] = clamp.init_angle[1] - 45;
+    clamp.clamp_flag = CLAMPED;
+    clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.big_island.offset_angle_mid; //回中
+    clamp.angle_ref[0] = clamp.init_angle[0] + 100;  //向下翻转
+    clamp.angle_ref[1] = clamp.init_angle[1] - 100;
   }
 }
 
@@ -473,6 +342,7 @@ void big_island_handler(void)
 {
   if(clamp.clamp_cmd)
   {
+    clamp.clamp_flag = CLAMPING;
     if(pick_box == FRIST_BOX)
     {
       if(HAL_GetTick() - action_times > 10)
@@ -485,33 +355,27 @@ void big_island_handler(void)
         GPIO_ResetBits(GPIOF,GPIO_Pin_0); //夹住
         GPIO_SetBits(GPIOE,GPIO_Pin_4);
       }
-      if(HAL_GetTick() - action_times > 400)
+      if(HAL_GetTick() - action_times > 300)
       {
         clamp.angle_ref[0] = clamp.init_angle[0] + 45;  //向上翻转
         clamp.angle_ref[1] = clamp.init_angle[1] - 45;
       }
-      if(HAL_GetTick() - action_times > 450)
+      if(HAL_GetTick() - action_times > 600)
       {
-        clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.big_island.offset_angle_1; //平移
-      }
-      if(HAL_GetTick() - action_times > 800)
-      {
-        GPIO_ResetBits(GPIOE,GPIO_Pin_12); //左气缸伸出去
+        GPIO_ResetBits(GPIOE,GPIO_Pin_12); //气缸伸出去
         GPIO_SetBits(GPIOB,GPIO_Pin_0);
-        GPIO_ResetBits(GPIOB,GPIO_Pin_1); //右气缸伸出去
-        GPIO_SetBits(GPIOC,GPIO_Pin_0);
       }
-      if(HAL_GetTick() - action_times > 800)
+      if(HAL_GetTick() - action_times > 750)
       {
         clamp.angle_ref[0] = clamp.init_angle[0] + 180;  //向下翻转
         clamp.angle_ref[1] = clamp.init_angle[1] - 180;
       }
-      if(HAL_GetTick() - action_times > 1000)
+      if(HAL_GetTick() - action_times > 900)
       {
         GPIO_ResetBits(GPIOE,GPIO_Pin_4); //松开
         GPIO_SetBits(GPIOF,GPIO_Pin_0);
       }
-      if(HAL_GetTick() - action_times > 1400)
+      if(HAL_GetTick() - action_times > 950)
       {
         action_times = HAL_GetTick();
         pick_box = SECOND_BOX;
@@ -524,50 +388,46 @@ void big_island_handler(void)
     /*第2箱*/
     if(pick_box == SECOND_BOX)
     {
-      if(HAL_GetTick() - action_times > 10)
-      {
-        clamp.angle_ref[0] = clamp.init_angle[0] + 180;  //向下翻转
-        clamp.angle_ref[1] = clamp.init_angle[1] - 180;
-      }
-      if(HAL_GetTick() - action_times > 100)
+//      if(HAL_GetTick() - action_times > 10)
+//      {
+//        clamp.angle_ref[0] = clamp.init_angle[0] + 180;  //向下翻转
+//        clamp.angle_ref[1] = clamp.init_angle[1] - 180;
+//      }
+      if(HAL_GetTick() - action_times > 50)
       {
         GPIO_ResetBits(GPIOF,GPIO_Pin_0); //夹住
         GPIO_SetBits(GPIOE,GPIO_Pin_4);
       }
-      if(HAL_GetTick() - action_times > 400)
+      if(HAL_GetTick() - action_times > 150)
       {
         clamp.angle_ref[0] = clamp.init_angle[0] + 45;  //向上翻转
         clamp.angle_ref[1] = clamp.init_angle[1] - 45;
       }
-      if(HAL_GetTick() - action_times > 600)
+      if(HAL_GetTick() - action_times > 250)
       {
-        GPIO_ResetBits(GPIOB,GPIO_Pin_0); //左气缸缩回来
+        GPIO_ResetBits(GPIOB,GPIO_Pin_0); //气缸缩回来
         GPIO_SetBits(GPIOE,GPIO_Pin_12);
-        GPIO_ResetBits(GPIOC,GPIO_Pin_0); //右气缸缩回来
-        GPIO_SetBits(GPIOB,GPIO_Pin_1);
+      }
+      if(HAL_GetTick() - action_times > 450)
+      {
+        clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.big_island.offset_angle_left; //左移
+      }
+      if(HAL_GetTick() - action_times > 700)
+      {
+        GPIO_ResetBits(GPIOE,GPIO_Pin_12); //气缸伸出去
+        GPIO_SetBits(GPIOB,GPIO_Pin_0);
       }
       if(HAL_GetTick() - action_times > 800)
-      {
-        clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.big_island.offset_angle_2; //平移
-      }
-      if(HAL_GetTick() - action_times > 1100)
-      {
-        GPIO_ResetBits(GPIOE,GPIO_Pin_12); //左气缸伸出去
-        GPIO_SetBits(GPIOB,GPIO_Pin_0);
-        GPIO_ResetBits(GPIOB,GPIO_Pin_1); //右气缸伸出去
-        GPIO_SetBits(GPIOC,GPIO_Pin_0);
-      }
-      if(HAL_GetTick() - action_times > 1200)
       {
         clamp.angle_ref[0] = clamp.init_angle[0] + 180;  //向下翻转
         clamp.angle_ref[1] = clamp.init_angle[1] - 180;
       }
-      if(HAL_GetTick() - action_times > 1300)
+      if(HAL_GetTick() - action_times > 950)
       {
         GPIO_ResetBits(GPIOE,GPIO_Pin_4); //松开
         GPIO_SetBits(GPIOF,GPIO_Pin_0);
       }
-      if(HAL_GetTick() - action_times > 1400)
+      if(HAL_GetTick() - action_times > 1000)
       {
         pick_box = THRID_BOX;
         action_times = HAL_GetTick();
@@ -589,21 +449,21 @@ void big_island_handler(void)
       }
       if(HAL_GetTick() - action_times > 350)
       {
-        GPIO_ResetBits(GPIOB,GPIO_Pin_0); //左气缸缩回来
+        GPIO_ResetBits(GPIOB,GPIO_Pin_0); //气缸缩回来
         GPIO_SetBits(GPIOE,GPIO_Pin_12);
-        GPIO_ResetBits(GPIOC,GPIO_Pin_0); //右气缸缩回来
-        GPIO_SetBits(GPIOB,GPIO_Pin_1);
       }
-      if(HAL_GetTick() - action_times > 550)
+      if(HAL_GetTick() - action_times > 450)
       {
-        clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.big_island.offset_angle_3; //平移
+        clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.big_island.offset_angle_mid; //回中
+      }
+      if(HAL_GetTick() - action_times > 650)
+      {
+        clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.big_island.offset_angle_right; //右移
       }
       if(HAL_GetTick() - action_times > 950)
       {
-        GPIO_ResetBits(GPIOE,GPIO_Pin_12); //左气缸伸出去
+        GPIO_ResetBits(GPIOE,GPIO_Pin_12); //气缸伸出去
         GPIO_SetBits(GPIOB,GPIO_Pin_0);
-        GPIO_ResetBits(GPIOB,GPIO_Pin_1); //右气缸伸出去
-        GPIO_SetBits(GPIOC,GPIO_Pin_0);
       }
       if(HAL_GetTick() - action_times > 1050)
       {
@@ -615,7 +475,7 @@ void big_island_handler(void)
         GPIO_ResetBits(GPIOE,GPIO_Pin_4); //松开
         GPIO_SetBits(GPIOF,GPIO_Pin_0);
       }
-      if(HAL_GetTick() - action_times > 1350)
+      if(HAL_GetTick() - action_times > 1250)
       {
         pick_box = FOURTH_BOX;
         action_times = HAL_GetTick();
@@ -636,35 +496,26 @@ void big_island_handler(void)
       }
       if(HAL_GetTick() - action_times > 350)
       {
-        GPIO_ResetBits(GPIOB,GPIO_Pin_0); //左气缸缩回来
+        GPIO_ResetBits(GPIOB,GPIO_Pin_0); //气缸缩回来
         GPIO_SetBits(GPIOE,GPIO_Pin_12);
-        GPIO_ResetBits(GPIOC,GPIO_Pin_0); //右气缸缩回来
-        GPIO_SetBits(GPIOB,GPIO_Pin_1);
       }
       if(HAL_GetTick() - action_times > 550)
       {
-        clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.big_island.offset_angle_4; //平移
+        clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.big_island.offset_angle_mid; //回中
       }
-      if(HAL_GetTick() - action_times > 800)
-      {
-        GPIO_ResetBits(GPIOE,GPIO_Pin_12); //左气缸伸出去
-        GPIO_SetBits(GPIOB,GPIO_Pin_0);
-        GPIO_ResetBits(GPIOB,GPIO_Pin_1); //右气缸伸出去
-        GPIO_SetBits(GPIOC,GPIO_Pin_0);
-      }
-      if(HAL_GetTick() - action_times > 950)
+      if(HAL_GetTick() - action_times > 850)
       {
         clamp.angle_ref[0] = clamp.init_angle[0] + 180;  //向下翻转
         clamp.angle_ref[1] = clamp.init_angle[1] - 180;
       }
-      if(HAL_GetTick() - action_times > 1050)
+      if(HAL_GetTick() - action_times > 1000)
       {
         GPIO_ResetBits(GPIOE,GPIO_Pin_4); //松开
         GPIO_SetBits(GPIOF,GPIO_Pin_0);
       }
-      if(HAL_GetTick() - action_times > 1150)
+      if(HAL_GetTick() - action_times > 1050)
       {
-        pick_box = FIFTH_BOX;
+        pick_box = FRIST_BOX;
         action_times = HAL_GetTick();
       }
     }
@@ -673,9 +524,10 @@ void big_island_handler(void)
   {
     action_times = HAL_GetTick();
     pick_box = FRIST_BOX;
-    clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.big_island.offset_angle_4; //平移
-    clamp.angle_ref[0] = clamp.init_angle[0] + 45;  //向上翻转
-    clamp.angle_ref[1] = clamp.init_angle[1] - 45;
+    clamp.clamp_flag = CLAMPED;
+    clamp.angle_ref[2] = clamp.init_angle[2] + offset_angle.big_island.offset_angle_mid; //回中
+    clamp.angle_ref[0] = clamp.init_angle[0] + 100;  //向下翻转
+    clamp.angle_ref[1] = clamp.init_angle[1] - 100;
   }
 }
 

@@ -22,8 +22,7 @@ void can_msg_send_task(void *parm)
     STAUS = xTaskNotifyWait((uint32_t) NULL, 
 										        (uint32_t) CLAMP_MOTOR_MSG_SIGNAL    | \
                                        RESCUE_MOTOR_MSG_SIGNAL   | \
-                                       UPRAISE_MOTOR_MSG_SIGNAL  | \
-                                       MODE_SWITCH_MSG_SIGNAL, 
+                                       UPRAISE_MOTOR_MSG_SIGNAL,
 									        	(uint32_t *)&Signal, 
 									        	(TickType_t) portMAX_DELAY );
 		if(STAUS == pdTRUE)
@@ -34,17 +33,11 @@ void can_msg_send_task(void *parm)
       }
       if(Signal & RESCUE_MOTOR_MSG_SIGNAL)//发送救援电机电流
       {
-        send_rescue_cur(pid_rescue_spd[0].out,pid_rescue_spd[1].out,pid_rescue_spd[2].out);
+//        send_rescue_cur(pid_rescue_spd[0].out,pid_rescue_spd[1].out,pid_rescue_spd[2].out);
       }
       if(Signal & UPRAISE_MOTOR_MSG_SIGNAL)//发送抬升电机电流
       {
         send_upraise_cur(pid_upraise_spd[0].out,pid_upraise_spd[1].out);
-      }
-      if(Signal & MODE_SWITCH_MSG_SIGNAL) //发送电流全为0
-      {
-        send_clamp_cur(0,0,0);
-        send_rescue_cur(0,0,0);
-        send_upraise_cur(0,0);
       }
 		}
     

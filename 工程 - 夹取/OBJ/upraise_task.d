@@ -51,6 +51,7 @@
 ..\obj\upraise_task.o: ..\TASK\modeswitch_task.h
 ..\obj\upraise_task.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 ..\obj\upraise_task.o: ..\TASK\comm_task.h
+..\obj\upraise_task.o: ..\TASK\clamp_task.h
 ..\obj\upraise_task.o: ..\FUNTION\pid.h
 ..\obj\upraise_task.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 ..\obj\upraise_task.o: ..\BSP_CONF\bsp_can.h

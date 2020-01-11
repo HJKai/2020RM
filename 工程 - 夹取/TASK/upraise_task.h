@@ -34,6 +34,7 @@ extern upraise_t upraise;
 
 void upraise_task(void *parm);
 void upraise_init_handler(void);
+void upraise_param_init(void);
 
 #endif
 

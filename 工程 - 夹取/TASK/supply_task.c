@@ -70,30 +70,22 @@ void supply_task(void *parm)
 
 void supply_param_init(void)
 {
-//  memset(&upraise, 0, sizeof(upraise_t));
-//  
-//  upraise.state = INIT_NEVER;
-
-//	for(int i = 0; i < 2; i++)
-//  {
-//    PID_Struct_Init(&pid_upraise[i],upraise_pid[0],upraise_pid[1],upraise_pid[2],5000, 500, INIT);
-//    PID_Struct_Init(&pid_upraise_spd[i],upraise_pid[3],upraise_pid[4],upraise_pid[5],10000, 500, INIT);
-//  }
-  
+  GPIO_ResetBits(GPIOC,GPIO_Pin_0); //补给气缸缩回来
+  GPIO_SetBits(GPIOB,GPIO_Pin_1);
 }
-
-
 
 void supply_to_hero_handler(void)
 {
 
   if(supply.supply_cmd)
   {
-    
+    GPIO_ResetBits(GPIOB,GPIO_Pin_1); //补给气缸伸出去
+    GPIO_SetBits(GPIOC,GPIO_Pin_0);
   }
   else
   {
-    
+    GPIO_ResetBits(GPIOC,GPIO_Pin_0); //补给气缸缩回来
+    GPIO_SetBits(GPIOB,GPIO_Pin_1);
   }
 }
 

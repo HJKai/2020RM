@@ -43,6 +43,7 @@
 #include "rescue_task.h"
 #include "supply_task.h"
 #include "clamp_task.h"
+#include "upraise_task.h"
 #include "stdlib.h"
 /** @addtogroup Template_Project
   * @{
@@ -82,6 +83,7 @@ int main(void)
   clamp_param_init();
   rescue_param_init();
   supply_param_init();
+  upraise_param_init();
   judgement_rx_param_init();
   judgement_tx_param_init();
   pc_rx_param_init();

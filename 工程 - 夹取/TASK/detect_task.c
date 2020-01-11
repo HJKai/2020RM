@@ -169,8 +169,8 @@ uint8_t clamp_is_controllable(void)
   if (global_mode != GLOBAL_CLAMP_MODE
    || global_err.list[MCU_COMM_OFFLINE].err_exist
    || global_err.list[REMOTE_CTRL_OFFLINE1].err_exist
-/*   || global_err.list[UPRAISE_M1_OFFLINE].err_exist
-   || global_err.list[UPRAISE_M2_OFFLINE].err_exist*/)
+   || global_err.list[UPRAISE_M1_OFFLINE].err_exist
+   || global_err.list[UPRAISE_M2_OFFLINE].err_exist)
     return 0;
   else
     return 1;

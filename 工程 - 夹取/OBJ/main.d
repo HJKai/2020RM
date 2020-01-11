@@ -69,4 +69,5 @@
 ..\obj\main.o: ..\TASK\rescue_task.h
 ..\obj\main.o: ..\TASK\supply_task.h
 ..\obj\main.o: ..\TASK\clamp_task.h
+..\obj\main.o: ..\TASK\upraise_task.h
 ..\obj\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
