@@ -96,7 +96,7 @@ void keyboard_global_hook(void)
 
 
 /*¿ØÖÆ¾ÈÔ®*/
-static void rescue_ctrl(uint8_t rescue_open,uint8_t rescue_close)
+static void kb_rescue_ctrl(uint8_t rescue_open,uint8_t rescue_close)
 {
   if(rescue_open) //×¥×¡
   {
@@ -178,7 +178,7 @@ void keyboard_rescue_hook(void)
 {
   if(km.kb_enable)
   {
-    rescue_ctrl(KB_RESCUE_CTRL,KB_CLOSE_RESCUE_CTRL);
+    kb_rescue_ctrl(KB_RESCUE_CTRL,KB_CLOSE_RESCUE_CTRL);
   }
 }
 

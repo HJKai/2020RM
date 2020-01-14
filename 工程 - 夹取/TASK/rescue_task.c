@@ -101,10 +101,9 @@ void rescue_param_init(void)
 {
   memset(&rescue, 0, sizeof(rescue_t));
   
-  rescue.state = INIT_NEVER;
   rescue.flag = 0;
-  rescue.state = INIT_NEVER;
-  rescue.last_state = INIT_DONE;
+  rescue.state = INIT_DONE;
+  rescue.last_state = INIT_NEVER;
 
 	for(int i = 0; i < 3; i++)
   {
@@ -123,7 +122,7 @@ void rescue_init_handler(void)
   {
     rescue.spd_ref[0] = 500;//×ó±ß
     rescue.spd_ref[1] = -500;//ÓÒ±ß
-    rescue.spd_ref[2] = 500;//×óÆ½ÒÆ
+    rescue.spd_ref[2] = 500;//ÏÂ·½
   }
   for(int i=0;i<3;i++)
   {
@@ -147,7 +146,7 @@ void rescue_init_handler(void)
       error_state[i] = 0;
       rescue.state = INIT_DONE;
       rescue.flag = 0;
-      rescue_mode = RESCUE_ENABLE;
+//      rescue_mode = RESCUE_ENABLE;
     }
   }
 }

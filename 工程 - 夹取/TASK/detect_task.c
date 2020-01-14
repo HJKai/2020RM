@@ -8,6 +8,7 @@
 #include "modeswitch_task.h"
 #include "stdio.h"
 #include "stdlib.h"
+#include "string.h"
 
 RCC_ClocksTypeDef RCC_Clocks;
 
@@ -15,15 +16,15 @@ UBaseType_t detect_stack_surplus;
 
 global_err_t global_err;
 
-State_t state,last_state;
+State_t detect_state,detect_last_state;
 char txt[24][2][20] = {{"",""},//0
                     {"底盘右上正常","底盘右上异常"},//1
                     {"底盘左上正常","底盘左上异常"},//2
                     {"底盘左下正常","底盘左下异常"},//3
                     {"底盘右下正常","底盘右下异常"},//4
-                    {"云台yaw轴正常","云台yaw轴异常"},//5
-                    {"云台pitch轴正常","云台pitch轴异常"},//6
-                    {"云台拨盘正常","云台拨盘异常"},//7
+                    {"yaw轴正常","yaw轴异常"},//5
+                    {"pitch轴正常","pitch轴异常"},//6
+                    {"拨盘正常","拨盘异常"},//7
                     {"左摩擦轮正常","左摩擦轮异常"},//8
                     {"右摩擦轮正常","右摩擦轮异常"},//9
                     {"遥控正常","遥控异常"},//10
@@ -40,67 +41,109 @@ char txt[24][2][20] = {{"",""},//0
                     {"mcu通信正常","mcu通信异常"},//21
                     {"裁判系统正常","裁判系统异常"},//22
                     {"小电脑正常","小电脑异常"}};//23
-uint32_t temp1,temp2,timeout = 0;
+uint32_t temp1,temp2;
 void detect_task(void *parm)
 {
-//  uint32_t temp1,temp2,timeout = 0;
-  char message[40];
+  char message[100];
   char *point = NULL;
 	uint32_t detect_wake_time = osKernelSysTick();
   while(1)
   {
     module_offline_detect();//获取夹取控制板的离线数据
-    state.offline = global_err.offline | global_err.gimbal_offline;
-    if(state.offline != last_state.offline) //判断整体离线状态是否发生变化
+    detect_state.offline = global_err.offline | global_err.gimbal_offline;
+    if(detect_state.offline != detect_last_state.offline) //判断整体离线状态是否发生变化
     {
-      temp1 = state.offline ^ last_state.offline;//获取发生变化的位 为1说明变化，0则不变
-      temp2 = state.offline;
-      for(uint8_t id = BOTTOM_DEVICE; id <= PC_SYS_OFFLINE; id++)
+      taskENTER_CRITICAL();
+      temp2 = detect_state.offline;
+      temp1 = (detect_state.offline ^ detect_last_state.offline) >> 1;//获取发生变化的位 为1说明变化，0则不变
+      for(uint8_t id = CHASSIS_M1_OFFLINE; id <= PC_SYS_OFFLINE; id++)
       {
-        if(temp1&0x01)//说明该位发生了变化
+        if(temp1&0x00000001)//说明该位发生了变化
         {
-          if((temp2 >> id)&0x01)//判断该位当前的状态 
+          if((temp2 >> id)&0x00000001)//判断该位当前的状态 
           {
             global_err.list[id].err_exist = 1;
             
-            sprintf(message,"page%d.t%d.pco=RED",(id/8)+1,id); //红色
-            sprintf(message,"page%d.t%d.txt=\"%s\"",(id/8)+1,id,txt[id][1]); //离线
+            sprintf(message,"page%d.t%d.pco=RED",(id/13)+1,(id-1)%12); //红色
             point = message;
-            for(int i = 0;i <= strlen(message);i++ )
+            for(int i = 0;i < strlen((char*)message);i++ )
             {
-              UART8->DR = *point++;
-              timeout = 500; //超时
-              while(((UART8->SR & USART_FLAG_TC) != (uint16_t)RESET) && timeout-- );
-              UART8->SR = (uint16_t)~USART_FLAG_TC;
+              while((UART8->SR & USART_FLAG_TXE) != USART_FLAG_TXE)
+              {
+              }
+              UART8->DR = (*point++ & (uint8_t)0xff);
             }
             for(int i = 0;i < 3;i++ )
             {
-              UART8->DR = 0XFF;
-              timeout = 500; //超时
-              while(((UART8->SR & USART_FLAG_TC) != (uint16_t)RESET) && timeout-- );
-              UART8->SR = (uint16_t)~USART_FLAG_TC;
+              for(int j = 0;j < sizeof(uint8_t);j++ )
+              {
+                while((UART8->SR & USART_FLAG_TXE) != USART_FLAG_TXE)
+                {
+                }
+                UART8->DR = (uint8_t)0xff;
+              }
+            }
+            sprintf(message,"page%d.t%d.txt=\"%s\"",(id/13)+1,(id-1)%12,txt[id][1]); //离线
+            point = message;
+            for(int i = 0;i < strlen((char*)message);i++ )
+            {
+              while((UART8->SR & USART_FLAG_TXE) != USART_FLAG_TXE)
+              {
+              }
+              UART8->DR = (*point++ & (uint8_t)0xff);
+            }
+            for(int i = 0;i < 3;i++ )
+            {
+              for(int j = 0;j < sizeof(uint8_t);j++ )
+              {
+                while((UART8->SR & USART_FLAG_TXE) != USART_FLAG_TXE)
+                {
+                }
+                UART8->DR = (uint8_t)0xff;
+              }
             }
           }
           else
           {
             global_err.list[id].err_exist = 0;
             
-            sprintf(message,"page%d.t%d.pco=GREEN",(id/8)+1,id); //绿色
-            sprintf(message,"page%d.t%d.txt=\"%s\"",(id/8)+1,id,txt[id][0]); //在线
+            sprintf(message,"page%d.t%d.pco=GREEN",(id/13)+1,(id-1)%12); //绿色
             point = message;
-            for(int i = 0;i <= strlen(message);i++ )
+            for(int i = 0;i < strlen((char*)message);i++ )
             {
-              UART8->DR = *point++;
-              timeout = 500; //超时
-              while(((UART8->SR & USART_FLAG_TC) != (uint16_t)RESET) && timeout--);
-              UART8->SR = (uint16_t)~USART_FLAG_TC;
+              while((UART8->SR & USART_FLAG_TXE) != USART_FLAG_TXE)
+              {
+              }
+              UART8->DR = (*point++ & (uint8_t)0xff);
             }
             for(int i = 0;i < 3;i++ )
             {
-              UART8->DR = 0XFF;
-              timeout = 500; //超时
-              while(((UART8->SR & USART_FLAG_TC) != (uint16_t)RESET) && timeout-- );
-              UART8->SR = (uint16_t)~USART_FLAG_TC;
+              for(int j = 0;j < sizeof(uint8_t);j++ )
+              {
+                while((UART8->SR & USART_FLAG_TXE) != USART_FLAG_TXE)
+                {
+                }
+                UART8->DR = (uint8_t)0xff;
+              }
+            }
+            sprintf(message,"page%d.t%d.txt=\"%s\"",(id/13)+1,(id-1)%12,txt[id][0]); //在线
+            point = message;
+            for(int i = 0;i < strlen((char*)message);i++ )
+            {
+              while((UART8->SR & USART_FLAG_TXE) != USART_FLAG_TXE)
+              {
+              }
+              UART8->DR = (*point++ & (uint8_t)0xff);
+            }
+            for(int i = 0;i < 3;i++ )
+            {
+              for(int j = 0;j < sizeof(uint8_t);j++ )
+              {
+                while((UART8->SR & USART_FLAG_TXE) != USART_FLAG_TXE)
+                {
+                }
+                UART8->DR = (uint8_t)0xff;
+              }
             }
           }
         }
@@ -109,11 +152,29 @@ void detect_task(void *parm)
           temp1 = temp1 >> 1;
         }
       }
+      detect_last_state.offline = detect_state.offline;//获取上一次离线状态
+      taskEXIT_CRITICAL();
     }
     
     RCC_GetClocksFreq(&RCC_Clocks);//检测外部晶振是否起振
     
-    last_state = state;//获取上一次离线状态
+    
+    
+    
+    /**************debug****************/
+    
+//    sprintf(message,"page%d.t%d.pco=RED",1,1); //红色
+//    sprintf(message,"page%d.t%d.txt=\"%s\"",1,2,"离线"); //离线
+//    point = message;
+//    for(int i = 0;i <= strlen(message);i++ )
+//    {
+//        while((UART8->SR & USART_FLAG_TXE) != USART_FLAG_TXE)
+//        {
+//        }
+//        UART8->DR = (*point++ & (uint8_t)0xFF);
+//    }
+    
+    /*****************debug*********************/
     
     detect_stack_surplus = uxTaskGetStackHighWaterMark(NULL);    
     vTaskDelayUntil(&detect_wake_time, 50);
@@ -200,3 +261,16 @@ uint8_t supply_is_controllable(void)
   else
     return 1;
 }
+
+/*UART8 中断函数*/
+void UART8_IRQHandler(void)
+{
+	if(USART_GetFlagStatus(UART8,USART_FLAG_IDLE) != RESET 
+		 && USART_GetITStatus(UART8,USART_IT_IDLE) != RESET)
+	{
+		USART_ReceiveData(UART8);		
+		USART_ClearFlag(UART8, USART_FLAG_IDLE);//清除空闲中断标志位
+    
+	}
+}
+
