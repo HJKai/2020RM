@@ -11,7 +11,7 @@ typedef struct
 }ramp_t;
 
 void ramp_init(ramp_t *ramp,uint32_t set_cnt);
-int ramp_calc(ramp_t *ramp);
+float ramp_calc(ramp_t *ramp);
 
 #endif
 

@@ -42,9 +42,9 @@ void mode_switch_task(void *parm)
     get_shoot_mode();
     
     /*·¢ËÍÒ£¿ØÊý¾Ý*/
-    send_rc_data1();
-    send_rc_data2();
-    send_rc_data3();
+//    send_rc_data1();
+//    send_rc_data2();
+//    send_rc_data3();
     
     xTaskGenericNotify( (TaskHandle_t) info_get_Task_Handle, 
                         (uint32_t) MODE_SWITCH_INFO_SIGNAL, 

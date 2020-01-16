@@ -271,42 +271,42 @@ static void nomarl_handler(void)
 //                              + km.yaw_v * GIMBAL_PC_MOVE_RATIO_YAW;
 //  }
   /*方案2 可行*/
-//  if(last_gimbal_mode != GIMBAL_NORMAL_MODE) //从小陀螺模式切换到跟随时，刷新零轴
-//  {
-//    gimbal.yaw_offset_angle = gimbal.sensor.yaw_gyro_angle;
-//    gimbal.pid.yaw_angle_ref = gimbal.yaw_offset_angle;
-//  }
-//  
-//  gimbal.state = remote_is_action(); //判断yaw轴是否有输入
-//  if(gimbal.last_state == NO_ACTION && gimbal.state == NO_ACTION)
-//  {
-//    gimbal.pid.yaw_angle_fdb = gimbal.sensor.yaw_gyro_angle;
-//    gimbal.pid.yaw_angle_ref = gimbal.yaw_offset_angle;
-//  }
-//  else if(gimbal.last_state == IS_ACTION && gimbal.state == NO_ACTION)
-//  {
-//    gimbal.yaw_offset_angle = gimbal.sensor.yaw_gyro_angle;
-//  }
-//  else
-//  {
-//    gimbal.pid.yaw_angle_fdb = gimbal.sensor.yaw_gyro_angle;
-//    gimbal.pid.yaw_angle_ref += rm.yaw_v * GIMBAL_RC_MOVE_RATIO_YAW
-//                              + km.yaw_v * GIMBAL_PC_MOVE_RATIO_YAW;
-//  }
-  
-  if(last_gimbal_mode != GIMBAL_NORMAL_MODE)
-    gimbal.pid.yaw_angle_ref = gimbal.sensor.yaw_relative_angle;
-  
-  gimbal.state = remote_is_action(); //判断yaw轴是否有输入
-  if(gimbal.state == NO_ACTION)
+  if(last_gimbal_mode != GIMBAL_NORMAL_MODE) //从小陀螺模式切换到跟随时，刷新零轴
   {
-    gimbal.pid.yaw_angle_ref = gimbal.sensor.yaw_relative_angle;
+    gimbal.yaw_offset_angle = gimbal.sensor.yaw_gyro_angle;
+    gimbal.pid.yaw_angle_ref = gimbal.yaw_offset_angle;
   }
   
-  gimbal.pid.yaw_angle_fdb = gimbal.sensor.yaw_relative_angle;
-  gimbal.pid.yaw_angle_ref += rm.yaw_v * GIMBAL_RC_MOVE_RATIO_YAW
-                           + km.yaw_v * GIMBAL_PC_MOVE_RATIO_YAW;
-  VAL_LIMIT(gimbal.pid.yaw_angle_ref, YAW_ANGLE_MIN, YAW_ANGLE_MAX);
+  gimbal.state = remote_is_action(); //判断yaw轴是否有输入
+  if(gimbal.last_state == NO_ACTION && gimbal.state == NO_ACTION)
+  {
+    gimbal.pid.yaw_angle_fdb = gimbal.sensor.yaw_gyro_angle;
+    gimbal.pid.yaw_angle_ref = gimbal.yaw_offset_angle;
+  }
+  else if(gimbal.last_state == IS_ACTION && gimbal.state == NO_ACTION)
+  {
+    gimbal.yaw_offset_angle = gimbal.sensor.yaw_gyro_angle;
+  }
+  else
+  {
+    gimbal.pid.yaw_angle_fdb = gimbal.sensor.yaw_gyro_angle;
+    gimbal.pid.yaw_angle_ref += rm.yaw_v * GIMBAL_RC_MOVE_RATIO_YAW
+                              + km.yaw_v * GIMBAL_PC_MOVE_RATIO_YAW;
+  }
+/*方案3*/
+//  if(last_gimbal_mode != GIMBAL_NORMAL_MODE)
+//    gimbal.pid.yaw_angle_ref = gimbal.sensor.yaw_relative_angle;
+//  
+//  gimbal.state = remote_is_action(); //判断yaw轴是否有输入
+//  if(gimbal.state == NO_ACTION)
+//  {
+//    gimbal.pid.yaw_angle_ref = gimbal.sensor.yaw_relative_angle;
+//  }
+//  
+//  gimbal.pid.yaw_angle_fdb = gimbal.sensor.yaw_relative_angle;
+//  gimbal.pid.yaw_angle_ref += rm.yaw_v * GIMBAL_RC_MOVE_RATIO_YAW
+//                           + km.yaw_v * GIMBAL_PC_MOVE_RATIO_YAW;
+//  VAL_LIMIT(gimbal.pid.yaw_angle_ref, YAW_ANGLE_MIN, YAW_ANGLE_MAX);
   /*pitch轴*/
   gimbal.pid.pit_angle_fdb = gimbal.sensor.pit_relative_angle;
   gimbal.pid.pit_angle_ref += rm.pit_v * GIMBAL_RC_MOVE_RATIO_PIT

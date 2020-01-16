@@ -86,7 +86,7 @@ int main(void)
   pc_rx_param_init();
   pc_tx_param_init();
 	/*从内部FLASH读出校准数据*/
-//	flash_cali();
+	flash_cali();
   
 	TASK_START();
 	vTaskStartScheduler();

@@ -41,12 +41,14 @@
 
 #define MUTEX_WAIT() \
 do {\
-  xSemaphoreTake(pfifo->mutex, 0xffffffff); \
+  if(pfifo->mutex != NULL)    \
+    xSemaphoreTake(pfifo->mutex, portMAX_DELAY); \
 } while(0)\
 
 #define MUTEX_RELEASE() \
 do {\
-  xSemaphoreGive(pfifo->mutex);\
+  if(pfifo->mutex != NULL)  \
+    xSemaphoreGive(pfifo->mutex);\
 } while(0)\
 
 #define MUTEX_DELETE()  vQueueDelete(pfifo->mutex);
